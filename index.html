@@ -1,92 +1,111 @@
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esha Himagirish — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  background:#06070f;
+  color:white;
+  font-family:'DM Sans',sans-serif;
+  cursor:none;
+}
+
+.cursor{
+  width:11px;
+  height:11px;
+  background:#7c5cfc;
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:9999;
+}
+
+.cursor-ring{
+  width:34px;
+  height:34px;
+  border:1px solid rgba(124,92,252,.45);
+  border-radius:50%;
+  position:fixed;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+  z-index:9998;
+}
+
+section{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<section>
+  <h1>Cursor Test — Move your mouse</h1>
+</section>
 
 <script>
-  // CURSOR
-  const cursor = document.getElementById('cursor');
-  const ring   = document.getElementById('cursorRing');
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
 
-  let rx = 0, ry = 0, cx = 0, cy = 0;
+let cx = 0, cy = 0;
+let rx = 0, ry = 0;
 
-  document.addEventListener('mousemove', e => {
-    cx = e.clientX;
-    cy = e.clientY;
+// Track mouse
+document.addEventListener('mousemove', (e) => {
+  cx = e.clientX;
+  cy = e.clientY;
 
-    if (cursor) {
-      cursor.style.left = cx + 'px';
-      cursor.style.top  = cy + 'px';
-    }
-  });
+  if (cursor) {
+    cursor.style.left = cx + 'px';
+    cursor.style.top  = cy + 'px';
+  }
+});
 
-  function animateCursor() {
-    rx += (cx - rx) * 0.12;
-    ry += (cy - ry) * 0.12;
+// Smooth ring animation
+function animate() {
+  rx += (cx - rx) * 0.12;
+  ry += (cy - ry) * 0.12;
 
-    if (ring) {
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-    }
-
-    requestAnimationFrame(animateCursor);
+  if (ring) {
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
   }
 
-  animateCursor();
+  requestAnimationFrame(animate);
+}
 
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      if (cursor && ring) {
-        cursor.style.width = '20px';
-        cursor.style.height = '20px';
-        ring.style.width = '50px';
-        ring.style.height = '50px';
-        ring.style.borderColor = 'rgba(0,212,200,.6)';
-      }
-    });
+animate();
 
-    el.addEventListener('mouseleave', () => {
-      if (cursor && ring) {
-        cursor.style.width = '11px';
-        cursor.style.height = '11px';
-        ring.style.width = '34px';
-        ring.style.height = '34px';
-        ring.style.borderColor = 'rgba(124,92,252,.45)';
-      }
-    });
+// Hover effects
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '20px';
+    cursor.style.height = '20px';
+    ring.style.width = '50px';
+    ring.style.height = '50px';
   });
 
-  // SCROLL PROGRESS
-  const bar = document.getElementById('progressBar');
-  window.addEventListener('scroll', () => {
-    bar.style.width =
-      (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100 + '%';
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '11px';
+    cursor.style.height = '11px';
+    ring.style.width = '34px';
+    ring.style.height = '34px';
   });
-
-  // TIMELINE FILTER
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const f = btn.dataset.filter;
-
-      document.querySelectorAll('.tl-item').forEach(item => {
-        item.classList.toggle('hidden', f !== 'all' && item.dataset.type !== f);
-      });
-    });
-  });
-
-  // SCROLL REVEAL
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.tl-item').forEach(el => {
-      el.classList.add('animate-in');
-      observer.observe(el);
-    });
-  }
+});
 </script>
+
+</body>
+</html>
