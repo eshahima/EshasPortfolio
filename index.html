@@ -812,7 +812,10 @@
   // SCROLL PROGRESS
   const bar = document.getElementById('progressBar');
   window.addEventListener('scroll', () => {
-    bar.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100 + '%';
+    const scrollable = document.body.scrollHeight - window.innerHeight;
+    if (bar && scrollable > 0) {
+      bar.style.width = (window.scrollY / scrollable) * 100 + '%';
+    }
   });
 
   // TIMELINE FILTER
