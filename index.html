@@ -3,109 +3,844 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Prevent Cloudflare from obfuscating emails -->
+<meta name="email-obfuscation" content="disable">
 <title>Esha Himagirish — Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-
 <style>
-body{
-  margin:0;
-  background:#06070f;
-  color:white;
-  font-family:'DM Sans',sans-serif;
-  cursor:none;
-}
+  :root {
+    --bg: #06070f;
+    --bg2: #0b0d1c;
+    --primary: #7c5cfc;
+    --accent: #00d4c8;
+    --warm: #f97316;
+    --gold: #f5c842;
+    --soft: #c4b5fd;
+    --text: #e9e7f5;
+    --muted: #6b6888;
+    --card: rgba(255,255,255,0.035);
+    --border: rgba(255,255,255,0.07);
+    --glow-p: 0 0 40px rgba(124,92,252,0.25);
+    --glow-a: 0 0 40px rgba(0,212,200,0.2);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;}
 
-.cursor{
-  width:11px;
-  height:11px;
-  background:#7c5cfc;
-  border-radius:50%;
-  position:fixed;
-  pointer-events:none;
-  transform:translate(-50%,-50%);
-  z-index:9999;
-}
+  .cursor{width:11px;height:11px;background:var(--primary);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(124,92,252,.8);}
+  .cursor-ring{width:34px;height:34px;border:1px solid rgba(124,92,252,.45);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.35;}
+  .progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));z-index:200;width:0%;transition:width .1s linear;}
 
-.cursor-ring{
-  width:34px;
-  height:34px;
-  border:1px solid rgba(124,92,252,.45);
-  border-radius:50%;
-  position:fixed;
-  pointer-events:none;
-  transform:translate(-50%,-50%);
-  z-index:9998;
-}
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.2rem 4rem;background:rgba(6,7,15,.78);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;letter-spacing:.05em;color:var(--text);text-decoration:none;}
+  .nav-logo span{color:var(--primary);}
+  .nav-links{display:flex;gap:2rem;list-style:none;}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+  .nav-links a:hover{color:var(--accent);}
 
-section{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;padding:8rem 4rem 4rem;position:relative;overflow:hidden;}
+  .hero-bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,200,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,200,.03) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);}
+  .hero-orb-1{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,252,.17) 0%,transparent 70%);top:-120px;right:-100px;animation:float1 9s ease-in-out infinite;}
+  .hero-orb-2{position:absolute;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,200,.11) 0%,transparent 70%);bottom:60px;left:8%;animation:float2 11s ease-in-out infinite;}
+  .hero-orb-3{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.09) 0%,transparent 70%);top:40%;left:40%;animation:float2 7s ease-in-out infinite reverse;}
+  @keyframes float1{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-28px) scale(1.04);}}
+  @keyframes float2{0%,100%{transform:translateY(0);}50%{transform:translateY(22px);}}
+
+  .hero-content{position:relative;z-index:1;max-width:820px;}
+  .hero-eyebrow{font-family:'DM Mono',monospace;font-size:.73rem;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;}
+  .hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--accent);}
+  .hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3.5rem,8vw,7rem);line-height:.95;letter-spacing:-.02em;margin-bottom:1.5rem;}
+  .hero-name .line{display:block;overflow:visible;}
+  .hero-name .line span{display:block;animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards;opacity:0;transform:translateY(100%);padding-bottom:0.08em;}
+  .hero-name .line:nth-child(1) span{animation-delay:.1s;}
+  .hero-name .line:nth-child(2) span{animation-delay:.25s;color:var(--primary);}
+  @keyframes slideUp{to{opacity:1;transform:translateY(0);}}
+
+  .hero-tagline{font-size:1.05rem;line-height:1.75;color:rgba(233,231,245,.68);max-width:520px;margin-bottom:2.5rem;animation:fadeIn 1s .5s ease forwards;opacity:0;}
+  @keyframes fadeIn{to{opacity:1;}}
+  .hero-cta{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeIn 1s .7s ease forwards;opacity:0;}
+  .btn{font-family:'DM Mono',monospace;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:.85rem 2rem;border-radius:2px;text-decoration:none;cursor:none;transition:all .2s ease;}
+  .btn-primary{background:var(--primary);color:#fff;border:1px solid var(--primary);}
+  .btn-primary:hover{background:transparent;color:var(--primary);box-shadow:var(--glow-p);}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent);box-shadow:var(--glow-a);}
+  .hero-links{position:absolute;bottom:3rem;right:4rem;display:flex;flex-direction:column;gap:.6rem;align-items:flex-end;animation:fadeIn 1s .9s ease forwards;opacity:0;}
+  .hero-link{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;display:flex;align-items:center;gap:.4rem;}
+  .hero-link::after{content:'↗';font-size:.68rem;}
+  .hero-link:hover{color:var(--primary);}
+
+  /* PRESS */
+  .press-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.3rem 4rem;display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap;}
+  .press-label{font-family:'DM Mono',monospace;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  .press-items{display:flex;gap:.7rem;flex-wrap:wrap;}
+  .press-item{font-family:'DM Mono',monospace;font-size:.67rem;color:var(--soft);text-decoration:none;border:1px solid rgba(196,181,253,.15);padding:.3rem .85rem;transition:all .2s;display:inline-flex;align-items:center;gap:.3rem;}
+  .press-item::after{content:'↗';font-size:.6rem;color:var(--muted);}
+  .press-item:hover{border-color:var(--primary);color:var(--primary);}
+
+  /* SECTION */
+  section{padding:7rem 4rem;position:relative;}
+  .section-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center;gap:.8rem;}
+  .section-label::after{content:'';flex:1;max-width:60px;height:1px;background:var(--primary);opacity:.5;}
+  .section-title{font-family:'Syne',sans-serif;font-weight:700;font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.02em;margin-bottom:3.5rem;}
+
+  /* ABOUT */
+  #about{background:var(--bg2);}
+  .about-grid{display:grid;grid-template-columns:1fr 1.6fr;gap:5rem;align-items:start;max-width:1100px;margin:0 auto;}
+  .about-left{}
+  .about-photo-placeholder{
+    width:100%;aspect-ratio:4/5;
+    background:linear-gradient(135deg,rgba(124,92,252,.12),rgba(0,212,200,.08));
+    border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+    font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:2rem;
+  }
+  .about-quick-facts{display:flex;flex-direction:column;gap:.7rem;}
+  .about-fact{display:flex;flex-direction:column;gap:.15rem;}
+  .fact-label{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);}
+  .fact-value{font-size:.88rem;color:var(--text);}
+  .about-right{}
+  .about-body{font-size:1.05rem;line-height:1.85;color:rgba(233,231,245,.82);margin-bottom:2.5rem;}
+  .about-body p{margin-bottom:1.2rem;}
+  .about-body p:last-child{margin-bottom:0;}
+  .about-highlight{color:var(--accent);font-weight:500;}
+  .about-highlight-p{color:var(--primary);font-weight:500;}
+  .about-chips{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:2rem;}
+  .about-chip{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.06em;padding:.35rem .9rem;border:1px solid var(--border);color:var(--muted);transition:all .2s;}
+  .about-chip:hover{border-color:var(--primary);color:var(--primary);}
+
+  /* SKILLS */
+  #skills{}
+  .skills-wrap{max-width:1100px;margin:0 auto;}
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5px;background:var(--border);border:1px solid var(--border);}
+  .skill-group{background:var(--bg);padding:2rem;transition:background .2s;}
+  .skill-group:hover{background:var(--card);}
+  .skill-group-title{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+  .skill-tag{font-family:'DM Mono',monospace;font-size:.7rem;padding:.28rem .75rem;border:1px solid var(--border);color:var(--muted);transition:all .2s;cursor:default;}
+  .skill-tag:hover{border-color:var(--primary);color:var(--primary);}
+
+  /* TIMELINE */
+  #resume{background:var(--bg2);}
+  .resume-wrap{max-width:1100px;margin:0 auto;}
+  .timeline-filters{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:3.5rem;}
+  .filter-btn{font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem 1.2rem;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:none;transition:all .2s;}
+  .filter-btn.active,.filter-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,200,.05);}
+  .timeline-track{position:relative;padding-left:3rem;}
+  .timeline-track::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--border) 5%,var(--border) 95%,transparent);}
+
+  .tl-item{position:relative;margin-bottom:2.5rem;opacity:1;transform:translateX(0);transition:opacity .5s ease,transform .5s ease;}
+  .tl-item.animate-in{opacity:0;transform:translateX(-18px);}
+  .tl-item.animate-in.visible{opacity:1;transform:translateX(0);}
+  .tl-item.hidden{display:none;}
+  .tl-item::before{content:'';position:absolute;left:-3rem;top:.65rem;width:9px;height:9px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);transform:translateX(-4px);transition:all .3s;z-index:1;}
+  .tl-item[data-type="education"]::before{border-color:var(--gold);}
+  .tl-item[data-type="experience"]::before{border-color:var(--warm);}
+  .tl-item[data-type="project"]::before{border-color:var(--accent);}
+  .tl-item[data-type="leadership"]::before{border-color:var(--soft);}
+  .tl-item:hover::before{background:var(--primary);border-color:var(--primary);box-shadow:0 0 12px var(--primary);}
+
+  .tl-card{background:var(--card);border:1px solid var(--border);padding:1.7rem 2rem;transition:border-color .2s,box-shadow .2s;}
+  [data-type="education"] .tl-card:hover{border-color:rgba(245,200,66,.3);box-shadow:0 0 28px rgba(245,200,66,.06);}
+  [data-type="experience"] .tl-card:hover{border-color:rgba(249,115,22,.3);box-shadow:0 0 28px rgba(249,115,22,.06);}
+  [data-type="project"] .tl-card:hover{border-color:rgba(0,212,200,.3);box-shadow:0 0 28px rgba(0,212,200,.06);}
+  [data-type="leadership"] .tl-card:hover{border-color:rgba(196,181,253,.3);box-shadow:0 0 28px rgba(196,181,253,.06);}
+
+  .tl-meta{display:flex;align-items:center;gap:.7rem;margin-bottom:.75rem;flex-wrap:wrap;}
+  .tl-type-badge{font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.15em;text-transform:uppercase;padding:.17rem .6rem;border-radius:2px;}
+  [data-type="education"] .tl-type-badge{background:rgba(245,200,66,.1);color:var(--gold);}
+  [data-type="experience"] .tl-type-badge{background:rgba(249,115,22,.1);color:var(--warm);}
+  [data-type="project"] .tl-type-badge{background:rgba(0,212,200,.1);color:var(--accent);}
+  [data-type="leadership"] .tl-type-badge{background:rgba(196,181,253,.1);color:var(--soft);}
+  .tl-date{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);}
+  .live-badge{display:inline-flex;align-items:center;gap:.35rem;font-family:'DM Mono',monospace;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(0,212,200,.1);color:var(--accent);border:1px solid rgba(0,212,200,.25);padding:.14rem .55rem;border-radius:2px;}
+  .live-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .tl-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.25rem;}
+  .tl-org{font-size:.82rem;color:var(--muted);margin-bottom:.9rem;}
+  .tl-points{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
+  .tl-points li{font-size:.86rem;line-height:1.65;color:rgba(233,231,245,.7);padding-left:1.2rem;position:relative;}
+  .tl-points li::before{content:'▸';position:absolute;left:0;color:var(--muted);font-size:.65rem;top:.25rem;}
+  .tl-link{display:inline-flex;align-items:center;gap:.4rem;font-family:'DM Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);text-decoration:none;margin-top:.9rem;transition:opacity .2s;}
+  .tl-link::after{content:'↗';}
+  .tl-link:hover{opacity:.7;}
+
+  /* FEATURED PROJECTS */
+  #projects{}
+  .projects-wrap{max-width:1100px;margin:0 auto;}
+  .projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1px;background:var(--border);}
+  .project-card{background:var(--bg);padding:2.5rem;position:relative;overflow:hidden;transition:background .3s;}
+  .project-card:hover{background:rgba(255,255,255,.025);}
+  .project-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transform-origin:left;transition:transform .3s ease;}
+  .project-card:nth-child(1)::after{background:var(--accent);}
+  .project-card:nth-child(2)::after{background:var(--warm);}
+  .project-card:hover::after{transform:scaleX(1);}
+  .project-num{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;color:rgba(255,255,255,.04);line-height:1;margin-bottom:1.5rem;letter-spacing:-.05em;transition:color .3s;}
+  .project-card:hover .project-num{color:rgba(255,255,255,.07);}
+  .project-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;margin-bottom:.4rem;}
+  .project-year{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--muted);margin-bottom:1rem;}
+  .project-desc{font-size:.87rem;line-height:1.75;color:rgba(233,231,245,.62);margin-bottom:1.5rem;}
+  .project-stack{display:flex;flex-wrap:wrap;gap:.4rem;}
+  .stack-tag{font-family:'DM Mono',monospace;font-size:.62rem;padding:.18rem .6rem;background:rgba(255,255,255,.03);color:var(--muted);border:1px solid var(--border);}
+  .project-link{display:inline-flex;align-items:center;gap:.3rem;font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);text-decoration:none;margin-top:1.2rem;transition:opacity .2s;}
+  .project-link::after{content:'↗';}
+  .project-link:hover{opacity:.7;}
+
+  /* BLOG */
+  #blog{background:var(--bg2);}
+  .blog-wrap{max-width:1100px;margin:0 auto;}
+  .blog-intro{font-size:.93rem;color:var(--muted);line-height:1.8;max-width:600px;margin-bottom:3rem;}
+  .blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;}
+
+  /* Real blog post card */
+  .blog-card{border:1px solid var(--border);background:var(--card);transition:border-color .2s;}
+  .blog-card:hover{border-color:rgba(124,92,252,.35);}
+  .blog-card-inner{padding:2.5rem;}
+  .blog-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--primary);margin-bottom:.6rem;display:block;}
+  .blog-date{font-family:'DM Mono',monospace;font-size:.66rem;color:var(--muted);margin-bottom:1.1rem;}
+  .blog-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.35rem;line-height:1.25;margin-bottom:1.2rem;}
+
+  /* Big quote inside blog */
+  .blog-pull-quote{
+    border-left:3px solid var(--primary);
+    padding:1rem 1.5rem;
+    margin:1.5rem 0;
+    background:rgba(124,92,252,.06);
+  }
+  .blog-pull-quote p{
+    font-family:'Syne',sans-serif;
+    font-size:1.45rem;
+    font-weight:700;
+    line-height:1.35;
+    color:var(--soft);
+    letter-spacing:-.01em;
+  }
+  .blog-pull-quote cite{
+    font-family:'DM Mono',monospace;
+    font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);display:block;margin-top:.7rem;font-style:normal;
+  }
+  .blog-body{font-size:.92rem;line-height:1.85;color:rgba(233,231,245,.75);}
+  .blog-body p{margin-bottom:1.1rem;}
+  .blog-body p:last-child{margin-bottom:0;}
+  .blog-body strong{color:var(--text);font-weight:500;}
+  .blog-read-more{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-family:'DM Mono',monospace;font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);text-decoration:none;margin-top:1.5rem;transition:opacity .2s;cursor:default;
+    border-top:1px solid var(--border);padding-top:1.5rem;width:100%;
+  }
+
+  /* Placeholder blog card */
+  .blog-card.placeholder{border-style:dashed;background:transparent;display:flex;flex-direction:column;align-items:flex-start;min-height:260px;justify-content:center;padding:2.5rem;}
+  .placeholder-plus{font-size:2.5rem;color:var(--border);margin-bottom:1rem;line-height:1;}
+  .placeholder-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+  /* CONTACT */
+  #contact{text-align:center;}
+  .contact-inner{max-width:700px;margin:0 auto;}
+  .contact-headline{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,5rem);line-height:.95;letter-spacing:-.03em;margin-bottom:2rem;}
+  .contact-headline span{color:var(--primary);}
+  .contact-info{margin-bottom:1.5rem;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--muted);letter-spacing:.05em;}
+  .contact-info a{color:var(--soft);text-decoration:none;transition:color .2s;}
+  .contact-info a:hover{color:var(--primary);}
+  .contact-links{display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;margin-top:3rem;}
+  .contact-link{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text);text-decoration:none;border:1px solid var(--border);padding:.75rem 1.8rem;transition:all .2s;}
+  .contact-link:hover{border-color:var(--primary);color:var(--primary);box-shadow:var(--glow-p);}
+
+  /* FOOTER */
+  footer{padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);}
+  .footer-text{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;}
+
+  @media(max-width:900px){
+    .about-grid{grid-template-columns:1fr;}
+    .about-left{display:none;}
+  }
+  @media(max-width:768px){
+    nav{padding:1rem 1.5rem;} .nav-links{display:none;}
+    section{padding:5rem 1.5rem;} .hero{padding:7rem 1.5rem 3rem;}
+    .hero-links{display:none;} footer{padding:1.5rem;flex-direction:column;gap:.5rem;}
+    .press-bar{padding:1.2rem 1.5rem;}
+  }
 </style>
 </head>
-
 <body>
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
+<div class="progress-bar" id="progressBar"></div>
 
-<section>
-  <h1>Cursor Test — Move your mouse</h1>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">EH<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#resume">Resume</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb-1"></div>
+  <div class="hero-orb-2"></div>
+  <div class="hero-orb-3"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">CS @ UIUC · Tech &amp; Entrepreneurship</div>
+    <h1 class="hero-name">
+      <span class="line"><span>Esha</span></span>
+      <span class="line"><span>Himagirish</span></span>
+    </h1>
+    <p class="hero-tagline">
+      Building technology at the intersection of impact, entrepreneurship, and engineering.
+    </p>
+    <div class="hero-cta">
+      <a href="#about" class="btn btn-primary">About Me</a>
+      <a href="#resume" class="btn btn-ghost">Resume</a>
+    </div>
+  </div>
+  <div class="hero-links">
+    <a href="https://www.linkedin.com/in/esha-himagirish/" target="_blank" class="hero-link">LinkedIn</a>
+    <a href="https://github.com/eshahima" target="_blank" class="hero-link">GitHub</a>
+    <a href="mailto:eshahulamani@outlook.com" class="hero-link">Email</a>
+  </div>
 </section>
 
+<!-- PRESS -->
+<div class="press-bar">
+  <span class="press-label">As Seen In</span>
+  <div class="press-items">
+    <a href="https://bvnwnews.com/features/2023/08/22/stepping-into-the-professional-world/" target="_blank" class="press-item">BVNWnews</a>
+    <a href="https://www.jccc.edu/media-resources/press-releases/2025/01/fall-2024-honor-rolls.html" target="_blank" class="press-item">JCCC Honor Roll</a>
+    <a href="https://www.youtube.com/watch?v=9M9Jfz4_AqM" target="_blank" class="press-item">YouTube Feature</a>
+    <a href="https://www.projectneurify.org/meet-the-team" target="_blank" class="press-item">Project Neurify</a>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-right" style="grid-column:1/-1;max-width:760px;">
+      <div class="section-label">Who I Am</div>
+      <h2 class="section-title">About Me</h2>
+      <div class="about-body">
+        <p>
+          I'm a <span class="about-highlight">Computer Science student at the University of Illinois Urbana-Champaign</span> interested in building technology that creates meaningful real-world impact. I have experience developing <span class="about-highlight">full-stack projects</span> using HTML, CSS, JavaScript, and Python, with a focus on data-driven design and clear user experiences.
+        </p>
+        <p>
+          I built <span class="about-highlight">Girls &amp; Cycles</span>, a web platform that integrates data visualization to make complex health information more accessible — combining engineering with purpose-driven design to reach communities that needed it most.
+        </p>
+        <p>
+          I'm particularly passionate about the <span class="about-highlight-p">intersection of technology, impact, and entrepreneurship</span>, and how technical solutions can scale to reach broader communities.
+        </p>
+      </div>
+      <div class="about-chips">
+        <span class="about-chip">Full-Stack Dev</span>
+        <span class="about-chip">Health Tech</span>
+        <span class="about-chip">Data Visualization</span>
+        <span class="about-chip">Entrepreneurship</span>
+        <span class="about-chip">UI/UX Design</span>
+        <span class="about-chip">Open Source</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SKILLS ═══ -->
+<section id="skills">
+  <div class="skills-wrap">
+    <div class="section-label">What I Know</div>
+    <h2 class="section-title">Skills &amp; Technologies</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Java</span><span class="skill-tag">Python</span>
+          <span class="skill-tag">JavaScript ES6</span><span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Frameworks &amp; Libraries</div>
+        <div class="skill-tags">
+          <span class="skill-tag">React.js</span><span class="skill-tag">Flutter</span>
+          <span class="skill-tag">Bootstrap</span><span class="skill-tag">Leaflet.js</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Data &amp; Modeling</div>
+        <div class="skill-tags">
+          <span class="skill-tag">SQL</span><span class="skill-tag">pandas</span>
+          <span class="skill-tag">Matplotlib</span><span class="skill-tag">Probabilistic Modeling</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Systems &amp; Tools</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Git / GitHub</span><span class="skill-tag">REST APIs</span>
+          <span class="skill-tag">LocalStorage</span><span class="skill-tag">Google Colab</span><span class="skill-tag">Kaggle</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RESUME / TIMELINE ═══ -->
+<section id="resume">
+  <div class="resume-wrap">
+    <div class="section-label">Credentials</div>
+    <h2 class="section-title">Resume &amp; Experience</h2>
+    <div class="timeline-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="education">Education</button>
+      <button class="filter-btn" data-filter="experience">Experience</button>
+      <button class="filter-btn" data-filter="project">Projects</button>
+      <button class="filter-btn" data-filter="leadership">Leadership</button>
+    </div>
+    <div class="timeline-track">
+
+      <!-- 2026 – IBC -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">2026 – Present</span><span class="live-badge">Active</span></div>
+          <div class="tl-title">Software Engineer</div>
+          <div class="tl-org">Illinois Business Consulting (IBC) · UIUC</div>
+          <ul class="tl-points">
+            <li>Building tech solutions to help consultants deliver stronger client engagements</li>
+            <li>Supporting digital initiatives and internal tooling for the chapter</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2026 – NOBE -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">2026 – Present</span><span class="live-badge">Active</span></div>
+          <div class="tl-title">Software Engineer</div>
+          <div class="tl-org">National Organization for Business &amp; Engineering (NOBE) · UIUC Chapter</div>
+          <ul class="tl-points">
+            <li>Contributing to NOBE's tech team, bridging business strategy with technical implementation</li>
+            <li>Supporting digital initiatives and internal tooling for the chapter</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2025 – regulate -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">2025 – Present · In Development</span><span class="live-badge">Active</span></div>
+          <div class="tl-title">Project Manager — <em>regulate</em></div>
+          <div class="tl-org">Project: Code · UIUC</div>
+          <ul class="tl-points">
+            <li>Leading development of <strong style="color:var(--accent)">regulate</strong> — a web app supporting daily stress &amp; mood awareness through guided check-ins, regulation exercises, reflections, and trend visualization</li>
+            <li>Early-stage development with a focus on accessible, human-centered design</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Oct 9–11, 2025: Code Ada -->
+      <div class="tl-item" data-type="leadership">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Leadership</span><span class="tl-date">Oct 9 – 11, 2025</span></div>
+          <div class="tl-title">Project Manager — Code Ada Hackathon</div>
+          <div class="tl-org">Code Ada</div>
+          <ul class="tl-points">
+            <li>Led a cross-functional team to design Future Object Predictor, an AI-based forecasting tool</li>
+            <li>Defined project scope, milestones, and technical architecture</li>
+            <li>Supported development across React, Python, and YOLO-based computer vision</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Oct–Dec 2025: Project Code UIUC -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">Oct – Dec 2025</span></div>
+          <div class="tl-title">Developer — Project Code: UIUC</div>
+          <div class="tl-org">Collaborative Dev Project</div>
+          <ul class="tl-points">
+            <li>Built full-stack Save/Favorite feature processing structured JSON restaurant data with interactive Leaflet.js map markers</li>
+            <li>Implemented client-side state persistence using localStorage to improve personalization and user retention</li>
+          </ul>
+          <a href="https://github.com/tanishkasuman/eats-uiuc" target="_blank" class="tl-link">GitHub Repo</a>
+        </div>
+      </div>
+
+      <!-- Aug 2025: UIUC -->
+      <div class="tl-item" data-type="education">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Education</span><span class="tl-date">Aug 2025 → Expected May 2029</span></div>
+          <div class="tl-title">B.S. Computer Science</div>
+          <div class="tl-org">University of Illinois Urbana-Champaign</div>
+          <ul class="tl-points">
+            <li><strong style="color:var(--soft)">Current Coursework:</strong> CS 128 (Intro to CS II), CS 361 (Probability &amp; Statistics for CS), BADM 310 (Management &amp; Organizational Behavior)</li>
+            <li><strong style="color:var(--soft)">Prior Coursework:</strong> Intro to Computer Science I (Java)</li>
+            <li><strong style="color:var(--soft)">Campus Involvement:</strong> IBC, NOBE, Project: Code … and more</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Jan–May 2025: Oracle -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">Jan – May 2025</span></div>
+          <div class="tl-title">Software Engineering Intern</div>
+          <div class="tl-org">Oracle</div>
+          <ul class="tl-points">
+            <li>Debugged and resolved UI rendering issues in a React.js component architecture, improving layout stability and usability</li>
+            <li>Wrote and validated production-level code through testing, peer review, and GitHub pull requests</li>
+            <li>Built a data-driven deployment tracking dashboard using a query-based language to aggregate metrics</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2025: Cycle Simulator -->
+      <div class="tl-item" data-type="project">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Project</span><span class="tl-date">2025</span></div>
+          <div class="tl-title">Menstrual Cycle Simulator</div>
+          <div class="tl-org">Girls &amp; Cycles</div>
+          <ul class="tl-points">
+            <li>Designed OOP simulation modeling cycle variability influenced by stress, sleep, and exercise</li>
+            <li>Implemented Java class hierarchies with probabilistic state transitions across cycles</li>
+            <li>Ported simulation to JavaScript ES6 with real-time parameter tuning in a responsive web interface</li>
+          </ul>
+          <a href="https://eshahima.github.io/GirlsAndCycles/simulator.html" target="_blank" class="tl-link">Live Simulator</a>
+        </div>
+      </div>
+
+      <!-- May 2025: Blue Valley -->
+      <div class="tl-item" data-type="education">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Education</span><span class="tl-date">Graduated May 2025</span></div>
+          <div class="tl-title">High School Diploma</div>
+          <div class="tl-org">Blue Valley Northwest High School · Overland Park, KS</div>
+          <ul class="tl-points">
+            <li>Relevant coursework: Discrete Math, Programming Fundamentals</li>
+          </ul>
+          <a href="https://github.com/eshahima/ProgrammingFundamentals" target="_blank" class="tl-link">Programming Fundamentals Repo</a>
+        </div>
+      </div>
+
+      <!-- Aug 2024–May 2025: CAPS -->
+      <div class="tl-item" data-type="education">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Education</span><span class="tl-date">Aug 2024 – May 2025</span></div>
+          <div class="tl-title">Computer Science Track</div>
+          <div class="tl-org">Blue Valley Center for Advanced Professional Studies (CAPS) · Overland Park, KS</div>
+          <ul class="tl-points">
+            <li>Discrete Math · Programming Fundamentals</li>
+            <li>Installation &amp; Maintenance of Health IT Systems</li>
+            <li>Configuration &amp; Implementation of Electronic Health Records</li>
+          </ul>
+          <a href="https://github.com/eshahima/ProgrammingFundamentals" target="_blank" class="tl-link">Programming Fundamentals Repo</a>
+        </div>
+      </div>
+
+      <!-- Aug 2024–May 2025: NHS -->
+      <div class="tl-item" data-type="leadership">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Leadership</span><span class="tl-date">Aug 2024 – May 2025 · 10 mos</span></div>
+          <div class="tl-title">Project Liaison</div>
+          <div class="tl-org">National Honor Society · Overland Park, KS</div>
+          <ul class="tl-points">
+            <li>Curated the yearly community service project list for NHS members</li>
+            <li>Recorded member points and managed project submissions</li>
+            <li>Focused on team organization and project tracking across the chapter</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Oct–Dec 2024: Adaptable Tech -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">Oct – Dec 2024</span></div>
+          <div class="tl-title">Technology &amp; UX Intern</div>
+          <div class="tl-org">Adaptable Tech</div>
+          <ul class="tl-points">
+            <li>Created wireframes and reusable UI templates translating client requirements into responsive designs</li>
+            <li>Conducted market research to improve information architecture and user flows</li>
+            <li>Collaborated with clients to translate business needs into technical solutions</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2024–2025: Period Tracker -->
+      <div class="tl-item" data-type="project">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Project</span><span class="tl-date">2024 – 2025</span></div>
+          <div class="tl-title">Girls &amp; Cycles — Period Tracker</div>
+          <div class="tl-org">Personal Project</div>
+          <ul class="tl-points">
+            <li>Developed a Flutter-based mobile app for cycle tracking and prediction</li>
+            <li>Implemented calendar visualization and date-based forecasting logic</li>
+          </ul>
+          <a href="https://github.com/eshahima/Period-Tracker" target="_blank" class="tl-link">GitHub Repo</a>
+        </div>
+      </div>
+
+      <!-- Jul 2023 & 2024: Kode With Klossy -->
+      <div class="tl-item" data-type="experience">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Experience</span><span class="tl-date">Jul 2023 &amp; Jul 2024</span></div>
+          <div class="tl-title">Scholar — Kode With Klossy</div>
+          <div class="tl-org">Kode With Klossy</div>
+          <ul class="tl-points">
+            <li>Selected for a scholarship to an intensive two-week summer program empowering young women &amp; non-binary students in STEAM</li>
+            <li><strong style="color:var(--soft)">Web Dev '23:</strong> Improved UI/UX skills; collaborated to build a complete website in 3 days</li>
+            <li><strong style="color:var(--soft)">Data Science '24:</strong> Mastered data cleaning, analysis, and visualization using Python &amp; Google Colab; built a site with interactive data visualizations</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 2023–2025: Girls & Cycles Platform -->
+      <div class="tl-item" data-type="project">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Project</span><span class="tl-date">2023 – 2025</span></div>
+          <div class="tl-title">Girls &amp; Cycles — Health Platform</div>
+          <div class="tl-org">Founder &amp; Lead Developer</div>
+          <ul class="tl-points">
+            <li>Built an educational health platform using HTML, CSS, and JavaScript</li>
+            <li>Created data visualizations in Python (Matplotlib) to communicate menstrual health trends</li>
+            <li>Led UI/UX design, content strategy, and technical development end-to-end</li>
+          </ul>
+          <a href="https://eshahima.github.io/GirlsAndCycles/index.html" target="_blank" class="tl-link">Live Site</a>
+        </div>
+      </div>
+
+      <!-- Aug 2022–May 2025: Biology Olympiad -->
+      <div class="tl-item" data-type="leadership">
+        <div class="tl-card">
+          <div class="tl-meta"><span class="tl-type-badge">Leadership</span><span class="tl-date">Aug 2022 – May 2025 · 2 yrs 10 mos</span></div>
+          <div class="tl-title">President — Biology Olympiad Club</div>
+          <div class="tl-org">Blue Valley Northwest HS · Overland Park, KS</div>
+          <ul class="tl-points">
+            <li>Expanded club visibility via posters and Instagram outreach; redesigned the meeting system</li>
+            <li>Led Olympiad sign-ups, posted deadlines, compiled prep resources, and maintained sponsor communications</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURED PROJECTS ═══ -->
+<section id="projects">
+  <div class="projects-wrap">
+    <div class="section-label">Featured Work</div>
+    <h2 class="section-title">Projects</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-num">01</div>
+        <div class="project-title">Girls &amp; Cycles</div>
+        <div class="project-year">2023 – 2025</div>
+        <div class="project-desc">End-to-end educational health platform integrating data visualization to make complex menstrual health information more accessible. Includes an OOP cycle simulator, Flutter mobile tracker, and Python data visualizations — built solo from design through deployment.</div>
+        <div class="project-stack">
+          <span class="stack-tag">HTML / CSS / JS</span><span class="stack-tag">Java</span>
+          <span class="stack-tag">Flutter</span><span class="stack-tag">Matplotlib</span>
+        </div>
+        <a href="https://eshahima.github.io/GirlsAndCycles/index.html" target="_blank" class="project-link">View Project</a>
+      </div>
+      <div class="project-card">
+        <div class="project-num">02</div>
+        <div class="project-title">Oracle Deployment Dashboard</div>
+        <div class="project-year">Jan – May 2025</div>
+        <div class="project-desc">Production-level deployment tracking dashboard built during a Software Engineering internship at Oracle. Aggregated deployment metrics using a query-based language and surfaced them through a React UI component built to production standards.</div>
+        <div class="project-stack">
+          <span class="stack-tag">React.js</span><span class="stack-tag">Query Language</span>
+          <span class="stack-tag">Production</span><span class="stack-tag">GitHub PRs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BLOG ═══ -->
+<section id="blog">
+  <div class="blog-wrap">
+    <div class="section-label">Writing</div>
+    <h2 class="section-title">Blog Posts</h2>
+    <p class="blog-intro">Reflections on technology, health, design, and the intersection of all three — written alongside my coursework and ongoing projects.</p>
+    <div class="blog-grid">
+
+      <!-- ── BLOG POST 1 ── -->
+      <div class="blog-card">
+        <div class="blog-card-inner">
+          <span class="blog-tag">Entrepreneurship · BADM 261</span>
+          <div class="blog-date">2025</div>
+          <div class="blog-title">Problem Obsessed, Not Solution Obsessed</div>
+
+          <div class="blog-pull-quote">
+            <p>"Entrepreneurs should be problem obsessed rather than solution obsessed."</p>
+            <cite>— BADM 261, University of Illinois Urbana-Champaign</cite>
+          </div>
+
+          <div class="blog-body">
+            <p>
+              I heard this quote in my BADM 261 class and honestly? It stopped me mid-note. I loved it the moment it was said. It was one of those things that just clicks — where you realize there's a name for something you've been doing wrong without even knowing it.
+            </p>
+            <p>
+              When I built <strong>Girls &amp; Cycles</strong>, I started with the solution. I saw that women's health was underdiscussed, that period education was scattered, that there wasn't a resource that felt genuinely made for young women — and I just started building. A website. A tracker. A simulator. I kept adding features on top of features, all anchored to the same original idea I had.
+            </p>
+            <p>
+              But this quote made me take a step back and actually ask: <strong>what are all the problems here?</strong> Not just the ones I had already decided to solve, but all of them — the ones I hadn't noticed, the ones I had dismissed, the ones that felt too hard. So I started writing them down. Not mental notes anymore — an actual, growing list, organized by category: access, awareness, stigma, tracking gaps, health literacy, community, support systems.
+            </p>
+            <p>
+              What I found surprised me. Some problems I had already solved — just without framing them that way. I had built data visualizations to make cycle trends clearer. I had built a simulator to make the biology feel less abstract. Those were real solutions to real problems, and naming them that way made me see where I could go deeper: more categories, more features, more intentional design decisions.
+            </p>
+            <p>
+              But some of the problems on my list were bigger than what I could build right now. There are things I want to solve that I genuinely don't have the skillset for yet. And instead of feeling stuck by that, I've started approaching it differently — I'm thinking about which CS classes, which projects, which experiences will give me the tools I need. Data structures for smarter prediction models. ML for personalized health insights. Distributed systems for scale. The problems are teaching me what I need to learn next.
+            </p>
+            <p>
+              Being problem obsessed doesn't mean you stop building. It means you build with more intention — you start from a place of deep understanding instead of jumping straight to a solution that feels comfortable. That shift has genuinely changed how I think about every project I work on now.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BLOG POST 2 ── -->
+      <div class="blog-card">
+        <div class="blog-card-inner">
+          <span class="blog-tag">Technology &amp; Management · BADM 261</span>
+          <div class="blog-date">2025</div>
+          <div class="blog-title">Finding My Direction: Technology, Management, and Why I Want Both</div>
+
+          <div class="blog-pull-quote">
+            <p>"I was always interested in entrepreneurship — but I never had a name for the specific intersection I wanted to live in."</p>
+          </div>
+
+          <div class="blog-body">
+            <p>
+              I first saw the email about the Hoeft Technology &amp; Management Program over the summer, and I knew immediately it was something I wanted to explore. Growing up, both of my parents worked in technology and management — but I never really thought of that combination as its own sector or path. It was just their jobs. It wasn't until I got to UIUC and started taking BADM 261 that I started seeing it clearly: there's an entire world at the intersection of technical depth and strategic thinking, and that's exactly where I want to be.
+            </p>
+            <p>
+              One thing BADM 261 has really made me think about is the idea of <strong>sequencing</strong> — getting the technical foundation right before jumping into management or leadership. I've heard from so many people in class who went very technical first, spent years deep in the work, and then moved into management from a place of real credibility. That's inspired me. For the next two or three semesters, I want to do the same: stay in the technical weeds, work across as many different technologies and projects as I can, and build up genuine depth. Whether that's through my RSOs, internships, or personal projects — I want to earn the knowledge before I start pursuing higher-level roles.
+            </p>
+            <p>
+              BADM 261 has also opened my eyes to careers I genuinely hadn't considered before. I came in thinking tech and entrepreneurship were my two lanes. But this class showed me how many roles exist at that crossover — product, venture, consulting, operations, innovation strategy — and how differently people arrive at them. It expanded what I think my path could look like.
+            </p>
+            <p>
+              More than anything, I've realized that I don't just love entrepreneurship. I love <strong>technology and management together</strong> — the challenge of building something technically sound and then figuring out how to make it actually work in the world: how to scale it, how to communicate it, how to lead teams around it. BADM 261 didn't just introduce me to a program. It introduced me to a version of my future I hadn't quite been able to articulate before.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label" style="justify-content:center;">Let's Connect</div>
+    <div class="contact-headline">Let's build<br>something <span>great.</span></div>
+    <p style="font-size:.93rem;color:var(--muted);line-height:1.8;max-width:440px;margin:0 auto;">
+      Open to internships, collaborations, and interesting conversations. Reach out anytime.
+    </p>
+    <div class="contact-info" style="margin-top:1.5rem;">
+      <a href="mailto:eshahulamani@outlook.com">eshahulamani@outlook.com</a>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:eshahulamani@outlook.com" class="contact-link">Email Me</a>
+      <a href="https://www.linkedin.com/in/esha-himagirish/" target="_blank" class="contact-link">LinkedIn</a>
+      <a href="https://github.com/eshahima" target="_blank" class="contact-link">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-text">© 2026 Esha Himagirish</span>
+  <span class="footer-text">CS @ UIUC · Built with HTML, CSS &amp; JS</span>
+</footer>
+
 <script>
-const cursor = document.getElementById('cursor');
-const ring   = document.getElementById('cursorRing');
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
 
-let cx = 0, cy = 0;
-let rx = 0, ry = 0;
+  let rx = 0, ry = 0, cx = 0, cy = 0;
 
-// Track mouse
-document.addEventListener('mousemove', (e) => {
-  cx = e.clientX;
-  cy = e.clientY;
-
-  if (cursor) {
-    cursor.style.left = cx + 'px';
-    cursor.style.top  = cy + 'px';
-  }
-});
-
-// Smooth ring animation
-function animate() {
-  rx += (cx - rx) * 0.12;
-  ry += (cy - ry) * 0.12;
-
-  if (ring) {
-    ring.style.left = rx + 'px';
-    ring.style.top  = ry + 'px';
-  }
-
-  requestAnimationFrame(animate);
-}
-
-animate();
-
-// Hover effects
-document.querySelectorAll('a, button').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.width = '20px';
-    cursor.style.height = '20px';
-    ring.style.width = '50px';
-    ring.style.height = '50px';
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX;
+    cy = e.clientY;
+    if (cursor) {
+      cursor.style.left = cx + 'px';
+      cursor.style.top  = cy + 'px';
+    }
   });
 
-  el.addEventListener('mouseleave', () => {
-    cursor.style.width = '11px';
-    cursor.style.height = '11px';
-    ring.style.width = '34px';
-    ring.style.height = '34px';
+  function animateCursor() {
+    rx += (cx - rx) * 0.12;
+    ry += (cy - ry) * 0.12;
+    if (ring) {
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+    }
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      if (cursor && ring) {
+        cursor.style.width  = '20px';
+        cursor.style.height = '20px';
+        ring.style.width    = '50px';
+        ring.style.height   = '50px';
+        ring.style.borderColor = 'rgba(0,212,200,.6)';
+      }
+    });
+    el.addEventListener('mouseleave', () => {
+      if (cursor && ring) {
+        cursor.style.width  = '11px';
+        cursor.style.height = '11px';
+        ring.style.width    = '34px';
+        ring.style.height   = '34px';
+        ring.style.borderColor = 'rgba(124,92,252,.45)';
+      }
+    });
   });
-});
+
+  // SCROLL PROGRESS
+  const bar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    bar.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100 + '%';
+  });
+
+  // TIMELINE FILTER
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.tl-item').forEach(item => {
+        item.classList.toggle('hidden', f !== 'all' && item.dataset.type !== f);
+      });
+    });
+  });
+
+  // SCROLL REVEAL
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.tl-item').forEach(el => {
+      el.classList.add('animate-in');
+      observer.observe(el);
+    });
+  }
 </script>
-
 </body>
 </html>
